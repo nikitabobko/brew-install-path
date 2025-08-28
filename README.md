@@ -4,7 +4,7 @@ Homebrew 4.6.4 introduces a breaking change that disables the possibility of ins
 
 - [Breaking change Issue](https://github.com/Homebrew/brew/issues/18371)
 - [Breaking change PR](https://github.com/Homebrew/brew/pull/20414)
-- [Homebrew Release notes](https://github.com/Homebrew/brew/releases/tag/4.6.4)
+- [Homebrew 4.6.4 Release notes](https://github.com/Homebrew/brew/releases/tag/4.6.4)
 
 [The official workaround](https://github.com/Homebrew/brew/issues/18371#issuecomment-2365396463) is to create a local tap and move your ruby file there.
 Which is obnoxious to do manually every time.
