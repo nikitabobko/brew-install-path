@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+require 'ripper'
+require 'fileutils'
+
+help = 'Usage: brew install-path [-h|--help] [-v|--version] [--] <PATH>...'
+
+paths = []
+index = 0
+while index < ARGV.size
+  if ARGV[index] == '--'
+    index += 1
+    paths += ARGV[index..]
+    break
+  elsif ARGV[index] == '-h' || ARGV[index] == '--help'
+    puts help
+    exit
+  elsif ARGV[index] == '-v' || ARGV[index] == '--version'
+    puts "1.0.0"
+    exit
+  elsif ARGV[index].start_with? '-'
+    STDERR.puts "Unknown option: #{ARGV[index]}"
+    exit 1
+  else
+    paths += [ARGV[index]]
+    index += 1
+  end
+end
+
+if paths.empty?
+  STDERR.puts "Error: At least one PATH is required"
+  STDERR.puts help
+  exit 1
+end
+
+def is_cask(file_path)
+  code = File.read(file_path)
+  tokens = Ripper.lex(code)
+
+  tokens.each do |(_, type, token, _)|
+    # Skip comments, newlines, and whitespace
+    if type == :on_comment || type == :on_sp || type == :on_ignored_nl || type == :on_embdoc_beg || type == :on_embdoc || type == :on_embdoc_end
+      next
+    end
+
+    return token == 'cask'
+  end
+
+  return false
+end
+
+def copy_create_parent_dirs(src, dst)
+  FileUtils.mkdir_p(File.dirname(dst))
+  FileUtils.cp(src, dst)
+end
+
+def my_system(*args)
+  ret = system(*args)
+  exit $?.exitstatus unless $?.success?
+  ret
+end
+
+brew_prefix = `brew --prefix`.strip
+
+paths.each do |path|
+  package_name = File.basename(path, '.rb')
+  filename = File.basename(path)
+  if is_cask(path)
+    copy_create_parent_dirs(path, "#{brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
+    my_system('brew', 'install', '--cask', "nikitabobko/local-tap/#{package_name}")
+  else
+    copy_create_parent_dirs(path, "#{brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Formula/#{filename}")
+    my_system('brew', 'install', '--formula', "nikitabobko/local-tap/#{package_name}")
+  end
+end
