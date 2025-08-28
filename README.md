@@ -25,6 +25,8 @@ brew install-path ./formula-or-cask.rb
 brew ip ./formula-or-cask.rb
 ```
 
+Formulas/Casks installed by `brew-install-path` are no different from other formulas/casks and can be uninstalled as usual by `brew uninstall`.
+
 ## Synopsis
 
 ```
