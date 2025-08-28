@@ -2,8 +2,18 @@
 require 'ripper'
 require 'fileutils'
 
-help = 'Usage: brew install-path [-h|--help] [-v|--version] [--] <PATH>...'
+help = <<TEXT
+Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [--] <PATH>...
 
+Options:
+  -h, --help        Print this help
+  -v, --version     Print version
+  --cask            Treat all named arguments as casks.
+  --formula         Treat all named arguments as formulas.
+TEXT
+
+treat_all_as_cask = false
+treat_all_as_formula = false
 paths = []
 index = 0
 while index < ARGV.size
@@ -17,10 +27,21 @@ while index < ARGV.size
   elsif ARGV[index] == '-v' || ARGV[index] == '--version'
     puts "1.0.0"
     exit
+  elsif ARGV[index] == '--cask'
+    treat_all_as_cask = true
+    index += 1
+  elsif ARGV[index] == '--formula'
+    treat_all_as_formula = true
+    index += 1
   else
     paths += [ARGV[index]]
     index += 1
   end
+end
+
+if treat_all_as_formula && treat_all_as_cask
+  STDERR.puts "--cask and --formula are conflicting options"
+  exit 1
 end
 
 if paths.empty?
@@ -56,16 +77,28 @@ def my_system(*args)
   ret
 end
 
-brew_prefix = `brew --prefix`.strip
+$brew_prefix = `brew --prefix`.strip
+
+def install_cask(path, filename, package_name)
+  copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
+  my_system('brew', 'install', '--cask', "nikitabobko/local-tap/#{package_name}")
+end
+
+def install_formula(path, filename, package_name)
+  copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Formula/#{filename}")
+  my_system('brew', 'install', '--formula', "nikitabobko/local-tap/#{package_name}")
+end
 
 paths.each do |path|
   package_name = File.basename(path, '.rb')
   filename = File.basename(path)
-  if is_cask(path)
-    copy_create_parent_dirs(path, "#{brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
-    my_system('brew', 'install', '--cask', "nikitabobko/local-tap/#{package_name}")
+  if treat_all_as_cask
+    install_cask(path, filename, package_name)
+  elsif treat_all_as_formula
+    install_formula(path, filename, package_name)
+  elsif is_cask(path)
+    install_cask(path, filename, package_name)
   else
-    copy_create_parent_dirs(path, "#{brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Formula/#{filename}")
-    my_system('brew', 'install', '--formula', "nikitabobko/local-tap/#{package_name}")
+    install_formula(path, filename, package_name)
   end
 end

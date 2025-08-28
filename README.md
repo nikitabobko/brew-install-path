@@ -28,5 +28,11 @@ brew ip ./formula-or-cask.rb
 ## Synopsis
 
 ```
-Usage: brew install-path [-h|--help] [-v|--version] [--] <PATH>...
+Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [--] <PATH>...
+
+Options:
+  -h, --help        Print this help
+  -v, --version     Print version
+  --cask            Treat all named arguments as casks.
+  --formula         Treat all named arguments as formulas.
 ```
