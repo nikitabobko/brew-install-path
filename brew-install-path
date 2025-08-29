@@ -33,6 +33,9 @@ while index < ARGV.size
   elsif ARGV[index] == '--formula'
     treat_all_as_formula = true
     index += 1
+  elsif ARGV[index].start_with? '-'
+    STDERR.puts "Unrecognized option: #{ARGV[index]}"
+    exit 1
   else
     paths += [ARGV[index]]
     index += 1
