@@ -33,10 +33,10 @@ Formulas/Casks installed by `brew-install-path` are no different from other form
 Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [OTHER_OPTIONS]... [--] <PATH>...
 
 Options:
-  -h, --help        Print this help and exit
-  -v, --version     Print version and exit
-  --cask            Treat all named arguments as casks
-  --formula         Treat all named arguments as formulas
+  -h, --help               Print this help and exit
+  -v, --version            Print version and exit
+  --cask                   Treat all named arguments as casks
+  --formula, --formulae    Treat all named arguments as formulas
 
 All other options are forwarded to 'brew install'
 ```

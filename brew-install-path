@@ -6,10 +6,10 @@ help = <<TEXT
 Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [OTHER_OPTIONS]... [--] <PATH>...
 
 Options:
-  -h, --help        Print this help and exit
-  -v, --version     Print version and exit
-  --cask            Treat all named arguments as casks
-  --formula         Treat all named arguments as formulas
+  -h, --help               Print this help and exit
+  -v, --version            Print version and exit
+  --cask                   Treat all named arguments as casks
+  --formula, --formulae    Treat all named arguments as formulas
 
 All other options are forwarded to 'brew install'
 TEXT
@@ -33,7 +33,7 @@ while index < ARGV.size
   elsif ARGV[index] == '--cask'
     treat_all_as_cask = true
     index += 1
-  elsif ARGV[index] == '--formula'
+  elsif ARGV[index] == '--formula' || ARGV[index] == '--formulae'
     treat_all_as_formula = true
     index += 1
   elsif ARGV[index].start_with?('./') || ARGV[index].end_with?('.rb')
