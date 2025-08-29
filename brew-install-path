@@ -20,27 +20,28 @@ paths = []
 $forwarded_options = []
 index = 0
 while index < ARGV.size
-  if ARGV[index] == '--'
+  current = ARGV[index]
+  if current == '--'
     index += 1
     paths += ARGV[index..]
     break
-  elsif ARGV[index] == '-h' || ARGV[index] == '--help'
+  elsif current == '-h' || current == '--help'
     puts help
     exit
-  elsif ARGV[index] == '-v' || ARGV[index] == '--version'
+  elsif current == '-v' || current == '--version'
     puts "1.1.0"
     exit
-  elsif ARGV[index] == '--cask'
+  elsif current == '--cask'
     treat_all_as_cask = true
     index += 1
-  elsif ARGV[index] == '--formula' || ARGV[index] == '--formulae'
+  elsif current == '--formula' || current == '--formulae'
     treat_all_as_formula = true
     index += 1
-  elsif ARGV[index].start_with?('./') || ARGV[index].end_with?('.rb')
-    paths += [ARGV[index]]
+  elsif current.start_with?('./') || current.end_with?('.rb')
+    paths += [current]
     index += 1
   else
-    $forwarded_options += [ARGV[index]]
+    $forwarded_options += [current]
     index += 1
   end
 end
