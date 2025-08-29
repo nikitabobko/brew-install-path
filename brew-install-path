@@ -3,18 +3,21 @@ require 'ripper'
 require 'fileutils'
 
 help = <<TEXT
-Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [--] <PATH>...
+Usage: brew install-path [-h|--help] [-v|--version] [--cask|--formula] [OTHER_OPTIONS]... [--] <PATH>...
 
 Options:
-  -h, --help        Print this help
-  -v, --version     Print version
-  --cask            Treat all named arguments as casks.
-  --formula         Treat all named arguments as formulas.
+  -h, --help        Print this help and exit
+  -v, --version     Print version and exit
+  --cask            Treat all named arguments as casks
+  --formula         Treat all named arguments as formulas
+
+All other options are forwarded to 'brew install'
 TEXT
 
 treat_all_as_cask = false
 treat_all_as_formula = false
 paths = []
+$forwarded_options = []
 index = 0
 while index < ARGV.size
   if ARGV[index] == '--'
@@ -33,11 +36,11 @@ while index < ARGV.size
   elsif ARGV[index] == '--formula'
     treat_all_as_formula = true
     index += 1
-  elsif ARGV[index].start_with? '-'
-    STDERR.puts "Unrecognized option: #{ARGV[index]}"
-    exit 1
-  else
+  elsif ARGV[index].start_with?('./') || ARGV[index].end_with?('.rb')
     paths += [ARGV[index]]
+    index += 1
+  else
+    $forwarded_options += [ARGV[index]]
     index += 1
   end
 end
@@ -84,12 +87,12 @@ $brew_prefix = `brew --prefix`.chomp
 
 def install_cask(path, filename, package_name)
   copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
-  my_system('brew', 'install', '--cask', "nikitabobko/local-tap/#{package_name}")
+  my_system('brew', 'install', '--cask', *$forwarded_options, "nikitabobko/local-tap/#{package_name}")
 end
 
 def install_formula(path, filename, package_name)
   copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Formula/#{filename}")
-  my_system('brew', 'install', '--formula', "nikitabobko/local-tap/#{package_name}")
+  my_system('brew', 'install', '--formula', *$forwarded_options, "nikitabobko/local-tap/#{package_name}")
 end
 
 paths.each do |path|
