@@ -77,7 +77,7 @@ def my_system(*args)
   ret
 end
 
-$brew_prefix = `brew --prefix`.strip
+$brew_prefix = `brew --prefix`.chomp
 
 def install_cask(path, filename, package_name)
   copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
