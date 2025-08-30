@@ -29,7 +29,7 @@ while index < ARGV.size
     puts help
     exit
   elsif current == '-v' || current == '--version'
-    puts "1.1.0"
+    puts "1.2.0"
     exit
   elsif current == '--cask'
     treat_all_as_cask = true
