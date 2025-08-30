@@ -37,7 +37,7 @@ while index < ARGV.size
   elsif current == '--formula' || current == '--formulae'
     treat_all_as_formula = true
     index += 1
-  elsif current.start_with?('./') || current.end_with?('.rb')
+  elsif current.start_with?('./') || current.start_with?('../') || current.start_with?('/') || current.end_with?('.rb')
     paths += [current]
     index += 1
   else
