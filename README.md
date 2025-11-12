@@ -40,3 +40,11 @@ Options:
 
 All other options are forwarded to 'brew install'
 ```
+
+## Disclaimer
+
+`brew-install-path` is written by somebody who ["demonstrates their lack of understanding of Homebrew works"](https://github.com/Homebrew/brew/issues/18371#issuecomment-3233910856), use at your own risk.
+
+If you found this script to be useful, keep in mind that your workflow is [probably "broken" and you should reevaluate using it](https://github.com/orgs/Homebrew/discussions/6351#discussioncomment-14257503).
+Also, please note that by using this script, you are actively "wasting the limited time" of precious homebrew volunteers.
+Thank you for your understanding.
