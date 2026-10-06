@@ -84,15 +84,15 @@ def my_system(*args)
   ret
 end
 
-$brew_prefix = `brew --prefix`.chomp
+$tap_path = `brew --repository nikitabobko/local-tap`.chomp
 
 def install_cask(path, filename, package_name)
-  copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Casks/#{filename}")
+  copy_create_parent_dirs(path, "#{$tap_path}/Casks/#{filename}")
   my_system('brew', 'install', '--cask', *$forwarded_options, "nikitabobko/local-tap/#{package_name}")
 end
 
 def install_formula(path, filename, package_name)
-  copy_create_parent_dirs(path, "#{$brew_prefix}/Library/Taps/nikitabobko/homebrew-local-tap/Formula/#{filename}")
+  copy_create_parent_dirs(path, "#{$tap_path}/Formula/#{filename}")
   my_system('brew', 'install', '--formula', *$forwarded_options, "nikitabobko/local-tap/#{package_name}")
 end
 
